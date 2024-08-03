@@ -1,1 +1,0 @@
-# genii-edu-realtime-services
