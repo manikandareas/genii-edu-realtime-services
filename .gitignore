@@ -1,4 +1,6 @@
+# env
 config.json
+dev.json
 
 .idea
 .vscode

@@ -17,6 +17,6 @@ func NewSessionRepository(log *logrus.Logger) *SessionRepository {
 	}
 }
 
-func (r *SessionRepository) FindByUserId(db *gorm.DB, session *entity.Session, userId string) error {
-	return db.Where("user_id = ?", userId).First(session).Error
+func (r *SessionRepository) FindByUserIdWithUser(db *gorm.DB, session *entity.Session, userId string) error {
+	return db.Preload("User").Where("user_id = ?", userId).First(session).Error
 }

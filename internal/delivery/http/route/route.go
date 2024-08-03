@@ -25,8 +25,8 @@ func (c *RouteConfig) SetupGuestRoute() {
 func (c *RouteConfig) SetupAuthRoute() {
 	c.App.Use(c.AuthMiddleware)
 
-	c.App.Get("/auth/ping", func(c *fiber.Ctx) error {
-		return c.Status(fiber.StatusOK).JSON(&fiber.Map{
+	c.App.Get("/auth/ping", func(ctx *fiber.Ctx) error {
+		return ctx.Status(fiber.StatusOK).JSON(&fiber.Map{
 			"message": "API with Auth is running",
 		})
 	})

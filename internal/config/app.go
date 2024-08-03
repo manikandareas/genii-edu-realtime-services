@@ -3,8 +3,8 @@ package config
 import (
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
-	"github.com/manikandareas/genii-edu-realtime-services/internal/http/middleware"
-	"github.com/manikandareas/genii-edu-realtime-services/internal/http/route"
+	"github.com/manikandareas/genii-edu-realtime-services/internal/delivery/http/middleware"
+	"github.com/manikandareas/genii-edu-realtime-services/internal/delivery/http/route"
 	"github.com/manikandareas/genii-edu-realtime-services/internal/repository"
 	"github.com/manikandareas/genii-edu-realtime-services/internal/usecase"
 	"github.com/sirupsen/logrus"

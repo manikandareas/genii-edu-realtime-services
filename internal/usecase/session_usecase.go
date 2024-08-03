@@ -30,13 +30,20 @@ func NewSessionUsecase(db *gorm.DB, log *logrus.Logger, validate *validator.Vali
 func (u *SessionUsecase) Verify(ctx context.Context, userId string) (*model.SessionResponse, error) {
 	session := new(entity.Session)
 
-	err := u.SessionRepository.FindByUserId(u.DB, session, userId)
+	err := u.SessionRepository.FindByUserIdWithUser(u.DB, session, userId)
 	if err != nil {
 		return nil, err
 	}
+
 	return &model.SessionResponse{
 		ID:        session.ID,
-		UserID:    session.UserId,
+		UserID:    session.UserID,
 		ExpiresAt: session.ExpiresAt,
+		User: model.UserResponse{
+			Name:     session.User.Name,
+			Username: session.User.Username,
+			Email:    session.User.Email,
+			Role:     string(session.User.Role),
+		},
 	}, nil
 }
