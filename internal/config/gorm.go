@@ -23,7 +23,7 @@ func NewDatabase(viper *viper.Viper, log *logrus.Logger) *gorm.DB {
 
 	PG_DSN := fmt.Sprintf("host=%s user=%s  dbname=%s port=%d sslmode=disable TimeZone=Asia/Makassar", host, username, database, port)
 	// MYSQL_DSN := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local", username, password, host, port, database)
-	fmt.Println(PG_DSN)
+
 	db, err := gorm.Open(postgres.Open(PG_DSN), &gorm.Config{
 		Logger: logger.New(&logrusWriter{Logger: log}, logger.Config{
 			SlowThreshold:             time.Second * 5,

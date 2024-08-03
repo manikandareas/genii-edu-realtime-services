@@ -9,10 +9,10 @@ import (
 func NewViper() *viper.Viper {
 	config := viper.New()
 
-	config.SetConfigName("config")
+	config.SetConfigName("dev")
 	config.SetConfigType("json")
 	config.AddConfigPath("./../")
-	config.AddConfigPath("./")
+	config.AddConfigPath("./config/")
 
 	if err := config.ReadInConfig(); err != nil {
 		panic(fmt.Errorf("fatal error config file: %w", err))

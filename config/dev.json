@@ -1,0 +1,24 @@
+{
+    "app": {
+      "name": "genii-edu-realtime-services"
+    },
+    "web": {
+      "prefork": false,
+      "port": 7113
+    },
+    "log": {
+      "level": 6
+    },
+    "database": {
+      "username": "manik",
+      "password": "",
+      "host": "localhost",
+      "port": 5432,
+      "name": "genii_edu",
+      "pool": {
+        "idle": 10,
+        "max": 100,
+        "lifetime": 300
+      }
+    }
+  }
