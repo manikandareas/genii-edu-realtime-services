@@ -7,9 +7,10 @@ import (
 
 func NewFiber(config *viper.Viper) *fiber.App {
 	var app = fiber.New(fiber.Config{
-		AppName:      config.GetString("app.name"),
-		ErrorHandler: NewErrorHandler(),
-		Prefork:      config.GetBool("web.prefork"),
+		AppName:           config.GetString("app.name"),
+		ErrorHandler:      NewErrorHandler(),
+		Prefork:           config.GetBool("web.prefork"),
+		EnablePrintRoutes: true,
 	})
 
 	return app

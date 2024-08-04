@@ -18,10 +18,12 @@ func NewClassMemberRepository(log *logrus.Logger) *ClassMemberRepository {
 }
 
 func (r *ClassMemberRepository) FindByClassIdAndRole(tx *gorm.DB, classId string, role string) ([]entity.ClassMember, error) {
-	var classMembers = []entity.ClassMember{}
-	err := tx.Where("class_id = ?", classId).Where("status_role = ?", role).Find(classMembers).Error
+	var classMembers []entity.ClassMember
+
+	err := tx.Where("class_id = ?", classId).Where("status_role = ?", role).Find(&classMembers).Error
 	if err != nil {
 		return nil, err
 	}
+
 	return classMembers, nil
 }

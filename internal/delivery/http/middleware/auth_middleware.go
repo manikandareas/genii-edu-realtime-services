@@ -8,22 +8,22 @@ import (
 
 func NewAuth(sessionUsecase *usecase.SessionUsecase) fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
-		auth := new(model.Auth)
+		userId := ctx.Get("x-user-id")
 
-		if err := ctx.BodyParser(auth); err != nil {
-			return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-				"message": "Invalid request",
+		if userId == "" {
+			return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+				"message": "Unauthorized",
 			})
 		}
 
-		session, err := sessionUsecase.Verify(ctx.Context(), auth.ID)
+		session, err := sessionUsecase.Verify(ctx.Context(), userId)
 		if err != nil {
 			return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 				"message": "Unauthorized",
 			})
 		}
 
-		sessionUsecase.Log.Debugf("User : %+v", auth.ID)
+		sessionUsecase.Log.Debugf("User : %+v", userId)
 
 		ctx.Locals("session", session)
 

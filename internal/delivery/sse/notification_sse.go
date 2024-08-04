@@ -2,6 +2,7 @@ package sse
 
 import (
 	"bufio"
+	"encoding/json"
 	"fmt"
 
 	"github.com/gofiber/fiber/v2"
@@ -25,12 +26,23 @@ func (s *NotificationSSE) StreamNotification(ctx *fiber.Ctx) error {
 	ctx.Set("Connection", "keep-alive")
 
 	session := middleware.GetSession(ctx)
+	s.Hub.NotificationChannel[session.UserID] = make(chan model.NotificationResponse)
 
 	ctx.Context().SetBodyStreamWriter(func(w *bufio.Writer) {
 		event := fmt.Sprintf("event: %s\n"+
 			"data: \n\n", "initial")
 		fmt.Fprint(w, event)
 		w.Flush()
+
+		for notification := range s.Hub.NotificationChannel[session.UserID] {
+			data, _ := json.Marshal(notification)
+
+			event = fmt.Sprintf("event: %s\n"+
+				"data: %s\n\n", "notification-updated", data)
+
+			_, _ = fmt.Fprint(w, event)
+			_ = w.Flush()
+		}
 	})
 	return nil
 }
