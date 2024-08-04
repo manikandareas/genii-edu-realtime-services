@@ -10,8 +10,8 @@ type ClassMember struct {
 	Role             RoleEnum                  `gorm:"column:status_role;type:role;default:'student';not null"`
 	JoinedAt         time.Time                 `gorm:"column:joined_at;type:timestamp with time zone;default:CURRENT_TIMESTAMP;not null"`
 	UpdatedAt        time.Time                 `gorm:"column:updated_at;type:timestamp with time zone;default:CURRENT_TIMESTAMP"`
-	Class            Class                     `gorm:"foreignKey:class_id;references:class_id"`
-	User             User                      `gorm:"foreignKey:user_id;references:user_id"`
+	Class            Class                     `gorm:"foreignKey:ClassID;references:ID"`
+	User             User                      `gorm:"foreignKey:UserID;references:ID"`
 }
 
 func (c *ClassMember) TableName() string {

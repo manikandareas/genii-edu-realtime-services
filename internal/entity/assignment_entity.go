@@ -11,8 +11,8 @@ type Assignment struct {
 	ClassID     string    `gorm:"column:class_id;type:text;not null"`
 	IsOpen      bool      `gorm:"column:is_open;default:true;not null"`
 	PublishedAt time.Time `gorm:"column:published_at;type:timestamp with time zone;default:CURRENT_TIMESTAMP;not null"`
-	Author      User      `gorm:"foreignKey:author_id;references:user_id"`
-	Class       Class     `gorm:"foreignKey:class_id;references:class_id"`
+	Author      User      `gorm:"foreignKey:AuthorID;references:ID"`
+	Class       Class     `gorm:"foreignKey:ClassID;references:ID"`
 	Timestamps
 }
 

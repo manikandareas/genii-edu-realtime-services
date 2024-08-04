@@ -10,7 +10,7 @@ type OAuthAccount struct {
 	AccessToken    string    `gorm:"column:access_token;type:text"`
 	RefreshToken   string    `gorm:"column:refresh_token;type:text"`
 	ExpiresAt      time.Time `gorm:"column:expires_at;type:timestamp with time zone"`
-	User           User      `gorm:"foreignKey:user_id;references:user_id"`
+	User           User      `gorm:"foreignKey:UserID;references:ID"`
 	Timestamps
 }
 

@@ -6,17 +6,17 @@ type File struct {
 	Key                string           `gorm:"column:key;type:text;not null"`
 	Name               string           `gorm:"column:name;type:text;not null"`
 	Type               FilesTypeEnum    `gorm:"column:type;type:files_type;not null"`
-	UserId             string           `gorm:"column:user_id;type:text;not null"`
-	LearningMaterialId string           `gorm:"column:learning_material_id;type:text"`
-	AssignmentId       string           `gorm:"column:assignment_id;type:text"`
-	SubmissionId       string           `gorm:"column:submission_id;type:text"`
+	UserID             string           `gorm:"column:user_id;type:text;not null"`
+	LearningMaterialID string           `gorm:"column:learning_material_id;type:text"`
+	AssignmentID       string           `gorm:"column:assignment_id;type:text"`
+	SubmissionID       string           `gorm:"column:submission_id;type:text"`
 	ClassID            string           `gorm:"column:class_id;type:text"`
 	IsProfilePicture   bool             `gorm:"column:is_profile_picture;default:false;not null"`
-	User               User             `gorm:"foreignKey:user_id;references:user_id"`
-	LearningMaterial   LearningMaterial `gorm:"foreignKey:learning_material_id;references:material_id"`
-	Assignment         Assignment       `gorm:"foreignKey:assignment_id;references:assignment_id"`
-	Submission         Submission       `gorm:"foreignKey:submission_id;references:submission_id"`
-	Class              Class            `gorm:"foreignKey:class_id;references:class_id"`
+	User               User             `gorm:"foreignKey:UserID;references:ID"`
+	LearningMaterial   LearningMaterial `gorm:"foreignKey:LearningMaterialID;references:ID"`
+	Assignment         Assignment       `gorm:"foreignKey:AssignmentID;references:ID"`
+	Submission         Submission       `gorm:"foreignKey:SubmissionID;references:ID"`
+	Class              Class            `gorm:"foreignKey:ClassID;references:ID"`
 	Timestamps
 }
 

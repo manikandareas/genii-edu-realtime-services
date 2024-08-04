@@ -11,8 +11,8 @@ type User struct {
 	Bio                string        `gorm:"column:bio"`
 	IsEmailVerified    bool          `gorm:"column:is_email_verified;default:false;not null"`
 	OnBoardingComplete bool          `gorm:"column:on_boarding_complete;default:false;not null"`
-	UserContact        UserContact   `gorm:"foreignKey:user_id;references:user_id"`
-	Classes            []ClassMember `gorm:"foreignKey:user_id;references:user_id"`
+	UserContact        UserContact   `gorm:"foreignKey:ID;references:UserID"`
+	Classes            []ClassMember `gorm:"foreignKey:ID;references:UserID"`
 	Timestamps
 }
 

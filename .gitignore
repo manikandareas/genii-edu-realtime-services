@@ -1,6 +1,6 @@
 # env
 config.json
-dev.json
+*dev.json
 
 .idea
 .vscode

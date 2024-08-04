@@ -10,8 +10,8 @@ type Announcement struct {
 	PostedAt  time.Time `gorm:"column:posted_at;type:timestamp with time zone;default:CURRENT_TIMESTAMP;not null"`
 	AuthorID  string    `gorm:"column:author_id;type:text;not null"`
 	UpdatedAt time.Time `gorm:"column:updated_at;type:timestamp with time zone;default:CURRENT_TIMESTAMP"`
-	Class     Class     `gorm:"foreignKey:class_id;references:class_id"`
-	Author    User      `gorm:"foreignKey:author_id;references:user_id"`
+	Class     Class     `gorm:"foreignKey:ClassID;references:ID"`
+	Author    User      `gorm:"foreignKey:AuthorID;references:ID"`
 }
 
 func (a *Announcement) TableName() string {

@@ -7,7 +7,7 @@ type EmailVerification struct {
 	UserID string    `gorm:"column:user_id;type:text;not null"`
 	Code   string    `gorm:"column:code;type:text;not null"`
 	SentAt time.Time `gorm:"column:sent_at;type:timestamp with time zone;default:CURRENT_TIMESTAMP;not null"`
-	User   User      `gorm:"foreignKey:user_id;references:user_id"`
+	User   User      `gorm:"foreignKey:UserID;references:ID"`
 	Timestamps
 }
 

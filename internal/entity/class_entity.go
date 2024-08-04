@@ -8,7 +8,7 @@ type Class struct {
 	ClassCode   string              `gorm:"column:class_code;type:text;not null"`
 	TeacherID   string              `gorm:"column:teacher_id;type:text;not null"`
 	AccessType  ClassAccessTypeEnum `gorm:"column:access_type;type:class_access_type;default:'private';not null"`
-	Teacher     User                `gorm:"foreignKey:teacher_id;references:user_id"`
+	Teacher     User                `gorm:"foreignKey:TeacherID;references:ID"`
 	Timestamps
 }
 

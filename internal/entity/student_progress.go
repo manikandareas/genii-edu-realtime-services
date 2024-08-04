@@ -6,8 +6,8 @@ type StudentProgress struct {
 	ClassID      string                  `gorm:"column:class_id;type:text;not null"`
 	ProgressType StudentProgressTypeEnum `gorm:"column:progress_type;type:student_progress_type;not null"`
 	Detail       string                  `gorm:"column:detail;type:text;not null"`
-	Student      User                    `gorm:"foreignKey:student_id;references:user_id"`
-	Class        Class                   `gorm:"foreignKey:class_id;references:class_id"`
+	Student      User                    `gorm:"foreignKey:StudentID;references:ID"`
+	Class        Class                   `gorm:"foreignKey:ClassID;references:ID"`
 	Timestamps
 }
 

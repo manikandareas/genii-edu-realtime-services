@@ -15,3 +15,11 @@ func NewLearningMaterialRepository(log *logrus.Logger) *LearningMaterialReposito
 		Log: log,
 	}
 }
+
+// func (r *LearningMaterialRepository) SendNotificationAfterCreate(tx *gorm.DB, classId string) error {
+// 	recipients := new([]entity.User)
+
+// 	// err := tx.Model(&entity.User{}).Where("class_id = ?", classId).Find(recipients).Error
+
+// 	return nil
+// }

@@ -10,8 +10,8 @@ type Submission struct {
 	Grade        float64    `gorm:"column:grade;type:numeric"`
 	SubmittedAt  time.Time  `gorm:"column:submitted_at;type:timestamp with time zone;default:CURRENT_TIMESTAMP;not null"`
 	UpdatedAt    time.Time  `gorm:"column:updated_at;type:timestamp with time zone;default:CURRENT_TIMESTAMP"`
-	Assignment   Assignment `gorm:"foreignKey:assignment_id;references:assignment_id"`
-	Student      User       `gorm:"foreignKey:student_id;references:user_id"`
+	Assignment   Assignment `gorm:"foreignKey:AssignmentID;references:ID"`
+	Student      User       `gorm:"foreignKey:StudentID;references:ID"`
 }
 
 func (s *Submission) TableName() string {
