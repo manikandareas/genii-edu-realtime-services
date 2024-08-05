@@ -2,10 +2,9 @@ package usecase
 
 import (
 	"context"
-	"time"
 
 	"github.com/go-playground/validator/v10"
-	"github.com/manikandareas/genii-edu-realtime-services/internal/entity"
+	"github.com/gofiber/fiber/v2"
 	"github.com/manikandareas/genii-edu-realtime-services/internal/model"
 	"github.com/manikandareas/genii-edu-realtime-services/internal/repository"
 	"github.com/sirupsen/logrus"
@@ -30,40 +29,19 @@ func NewNotificationUsecase(db *gorm.DB, log *logrus.Logger, validate *validator
 	}
 }
 
-func (u *NotificationUsecase) Insert(ctx context.Context, request *model.NotificationRequest) error {
-	tx := u.DB.WithContext(ctx).Begin()
-	defer tx.Rollback()
-
-	notification := &entity.Notification{
-		Message: request.Message,
-		UserID:  request.UserID,
-		IsRead:  false,
-		Timestamps: entity.Timestamps{
-			CreatedAt: time.Now(),
-			UpdatedAt: time.Now(),
-		},
+func (u *NotificationUsecase) HandleBroadcast(ctx context.Context, request *model.BroadcastRequest) error {
+	if err := u.Validate.Struct(request); err != nil {
+		u.Log.WithError(err).Error("failed to validate request body")
+		return fiber.ErrBadRequest
 	}
-
-	err := u.NotificationRepository.Create(tx, notification)
-	if err != nil {
-		return err
+	for _, recipient := range request.Recipients {
+		go func() {
+			if channel, ok := u.Hub.NotificationChannel[recipient]; ok {
+				channel <- model.Event{
+					Event: request.Event,
+				}
+			}
+		}()
 	}
-
-	if channel, ok := u.Hub.NotificationChannel[request.UserID]; ok {
-		channel <- model.NotificationResponse{
-			ID:        notification.ID,
-			Message:   notification.Message,
-			IsRead:    notification.IsRead,
-			CreatedAt: notification.CreatedAt,
-			UserID:    notification.UserID,
-			UpdatedAt: notification.UpdatedAt,
-		}
-	}
-
-	if err := tx.Commit().Error; err != nil {
-		u.Log.WithError(err).Error("error inserting notification")
-		return err
-	}
-
 	return nil
 }

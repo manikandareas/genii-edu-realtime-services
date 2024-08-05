@@ -26,7 +26,7 @@ func (s *NotificationSSE) StreamNotification(ctx *fiber.Ctx) error {
 	ctx.Set("Connection", "keep-alive")
 
 	session := middleware.GetSession(ctx)
-	s.Hub.NotificationChannel[session.UserID] = make(chan model.NotificationResponse)
+	s.Hub.NotificationChannel[session.UserID] = make(chan model.Event)
 
 	ctx.Context().SetBodyStreamWriter(func(w *bufio.Writer) {
 		event := fmt.Sprintf("event: %s\n"+
@@ -34,11 +34,11 @@ func (s *NotificationSSE) StreamNotification(ctx *fiber.Ctx) error {
 		fmt.Fprint(w, event)
 		w.Flush()
 
-		for notification := range s.Hub.NotificationChannel[session.UserID] {
-			data, _ := json.Marshal(notification)
+		for e := range s.Hub.NotificationChannel[session.UserID] {
+			data, _ := json.Marshal(e)
 
 			event = fmt.Sprintf("event: %s\n"+
-				"data: %s\n\n", "notification-updated", data)
+				"data: %s\n\n", data, data)
 
 			_, _ = fmt.Fprint(w, event)
 			_ = w.Flush()

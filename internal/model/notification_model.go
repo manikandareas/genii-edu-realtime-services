@@ -11,7 +11,7 @@ type NotificationResponse struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-type NotificationRequest struct {
-	Message string `json:"message"`
-	UserID  string `json:"user_id"`
+type BroadcastRequest struct {
+	Event      string   `json:"event" validate:"required,min=3"`
+	Recipients []string `json:"recipients" validate:"required"`
 }

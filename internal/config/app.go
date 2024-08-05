@@ -23,16 +23,12 @@ type BootstrapConfig struct {
 	Log      *logrus.Logger
 	Validate *validator.Validate
 	Config   *viper.Viper
+	Hub      *model.Hub
 }
 
 // Bootstrap sets up the application with the provided configuration.
 // It sets up the repositories, use cases, controllers, middlewares, and routes.
 func Bootstrap(config *BootstrapConfig) {
-	// hub for sse
-	hub := &model.Hub{
-		NotificationChannel: map[string]chan model.NotificationResponse{},
-	}
-
 	// setup repositories
 	sessionRepository := repository.NewSessionRepository(config.Log)
 	notificationRepository := repository.NewNotificationRepository(config.Log)
@@ -41,18 +37,19 @@ func Bootstrap(config *BootstrapConfig) {
 
 	// setup use cases
 	sessionUsecase := usecase.NewSessionUsecase(config.DB, config.Log, config.Validate, sessionRepository)
-	notificationUsecase := usecase.NewNotificationUsecase(config.DB, config.Log, config.Validate, notificationRepository, hub)
-	learningMaterialUsecase := usecase.NewLearningMaterialUsecase(config.DB, config.Log, config.Validate, learningMaterialRepository, classMemberRepository, notificationUsecase)
+	notificationUsecase := usecase.NewNotificationUsecase(config.DB, config.Log, config.Validate, notificationRepository, config.Hub)
+	learningMaterialUsecase := usecase.NewLearningMaterialUsecase(config.DB, config.Log, config.Validate, learningMaterialRepository, classMemberRepository)
 
 	// setup controllers
+	factoryController := http.NewFactoryController(config.Log)
 	learningMaterialController := http.NewLearningMaterialController(config.Log, learningMaterialUsecase)
-
+	notificationController := http.NewNotificationController(config.Log, notificationUsecase)
 	// setup middlewares
 	authMiddleware := middleware.NewAuth(sessionUsecase)
 	teacherMiddleware := middleware.NewTeacher(sessionUsecase)
 
 	// setup sse
-	notificationSSE := sse.NewNotificationSSE(hub)
+	notificationSSE := sse.NewNotificationSSE(config.Hub)
 
 	// setup routes
 	routeConfig := &route.RouteConfig{
@@ -60,11 +57,13 @@ func Bootstrap(config *BootstrapConfig) {
 		AuthMiddleware:             authMiddleware,
 		LearningMaterialController: learningMaterialController,
 		TeacherMiddleware:          teacherMiddleware,
+		FactoryController:          factoryController,
+		NotificationController:     notificationController,
 	}
 
 	sseConfig := &sseconfig.SSERoute{
 		App:             config.App,
-		Hub:             hub,
+		Hub:             config.Hub,
 		AuthMiddleware:  authMiddleware,
 		NotificationSSE: notificationSSE,
 	}

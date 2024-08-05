@@ -11,6 +11,8 @@ type RouteConfig struct {
 	AuthMiddleware             fiber.Handler
 	TeacherMiddleware          fiber.Handler
 	LearningMaterialController *http.LearningMaterialController
+	NotificationController     *http.NotificationController
+	FactoryController          *http.FactoryController
 }
 
 func (c *RouteConfig) Setup() {
@@ -19,23 +21,12 @@ func (c *RouteConfig) Setup() {
 }
 
 func (c *RouteConfig) SetupGuestRoute() {
-	c.App.Get("/api/ping", func(c *fiber.Ctx) error {
-		return c.Status(fiber.StatusOK).JSON(&fiber.Map{
-			"message": "API is running",
-		})
-	})
+	c.App.Get("/api/ping", c.FactoryController.HandlePing)
 	c.App.Get("/api/metrics", monitor.New(monitor.Config{Title: "Genii Edu Realtime Services Metrics"}))
 }
 
 func (c *RouteConfig) SetupAuthRoute() {
 	c.App.Use(c.AuthMiddleware)
-
-	c.App.Get("/api/auth/ping", func(ctx *fiber.Ctx) error {
-		return ctx.Status(fiber.StatusOK).JSON(&fiber.Map{
-			"message": "API with Auth is running",
-		})
-	})
-
-	c.App.Post("/api/learning-material/new", c.TeacherMiddleware, c.LearningMaterialController.SendNotificationAfterCreate)
-
+	c.App.Get("/api/auth/ping", c.FactoryController.HandleAuthPing)
+	c.App.Post("/api/notifications/broadcast", c.NotificationController.HandleBroadcast)
 }

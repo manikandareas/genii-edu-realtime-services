@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/manikandareas/genii-edu-realtime-services/internal/config"
+	"github.com/manikandareas/genii-edu-realtime-services/internal/model"
 )
 
 func main() {
@@ -12,6 +13,9 @@ func main() {
 	validator := config.NewValidator(viperConfig)
 	log := config.NewLogger(viperConfig)
 	db := config.NewDatabase(viperConfig, log)
+	hub := &model.Hub{
+		NotificationChannel: make(map[string]chan model.Event),
+	}
 
 	config.Bootstrap(&config.BootstrapConfig{
 		DB:       db,
@@ -19,6 +23,7 @@ func main() {
 		Validate: validator,
 		Log:      log,
 		Config:   viperConfig,
+		Hub:      hub,
 	})
 
 	webPort := viperConfig.GetInt("web.port")

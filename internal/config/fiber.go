@@ -2,6 +2,7 @@ package config
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/spf13/viper"
 )
 
@@ -12,6 +13,10 @@ func NewFiber(config *viper.Viper) *fiber.App {
 		Prefork:           config.GetBool("web.prefork"),
 		EnablePrintRoutes: true,
 	})
+
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: "http://localhost:3000",
+	}))
 
 	return app
 }
