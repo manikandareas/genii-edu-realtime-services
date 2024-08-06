@@ -1,6 +1,11 @@
 package config
 
 import (
+	"log"
+	"os"
+	"os/signal"
+	"syscall"
+
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/manikandareas/genii-edu-realtime-services/internal/delivery/http"
@@ -70,4 +75,35 @@ func Bootstrap(config *BootstrapConfig) {
 
 	routeConfig.Setup()
 	sseConfig.Setup()
+}
+
+type GracefulShutdownConfig struct {
+	App *fiber.App
+	Hub *model.Hub
+}
+
+func GracefulShutdown(config *GracefulShutdownConfig) {
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
+
+	// Menunggu sinyal shutdown
+	<-c
+	log.Println("Shutting down...")
+
+	config.Hub.Mutex.Lock()
+	log.Println("Closing all channels...")
+	for _, channel := range config.Hub.NotificationChannel {
+		close(channel)
+	}
+	config.Hub.NotificationChannel = make(map[string]chan model.Event)
+	config.Hub.Mutex.Unlock()
+	log.Println("All channels closed")
+
+	log.Println("Shutting down Fiber app...")
+	if err := config.App.Shutdown(); err != nil {
+		log.Printf("Error shutting down server: %v", err)
+		os.Exit(1)
+	}
+
+	log.Println("Server gracefully stopped")
 }

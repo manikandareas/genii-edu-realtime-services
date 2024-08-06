@@ -7,4 +7,4 @@ build:
 	go build -ldflags "-s" -v -o $(BUILD_DIR)/$(BINARY_NAME) $(CMD_DIR)
 
 dev:
-	go run $(CMD_DIR)
+	@go run $(CMD_DIR) || true
